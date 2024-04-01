@@ -49,10 +49,10 @@ namespace GraphTheory
             return true;
         }
 
-        private bool IsWindmillGraph(out int k, out int n)
+        private bool IsWindmillGraph(out int n)
         {
             // Khởi tạo params
-            k = 0;
+            int k = 3; // Theo đề bài
             n = 0;
 
             var vertexCount = adjMatrix.VertexCount;
@@ -61,22 +61,16 @@ namespace GraphTheory
             // Đếm bậc của từng đỉnh
             int[] degrees = CountVertexDegree();
 
-            // Tìm đỉnh chung
-            int maxDegree = degrees.Max();
-            int universalVertex = Array.FindIndex(degrees, index => index == maxDegree);
+            // Tìm đỉnh chung là đỉnh có kết nối với tất cả các đỉnh còn lại
+            int universalVertex = Array.FindIndex(degrees, index => index == vertexCount - 1);
+            if (universalVertex == -1) return false;
 
-            // Kiểm tra đỉnh chung có kết nối tới tất cả các đỉnh còn lại không
-            if (maxDegree < vertexCount - 1) return false;
-
-            // Kiểm tra bậc của tất cả các đỉnh còn lại có bằng nhau không
-            int minDegree = degrees.Min();
-            for (int i = 0; i < vertexCount && i != universalVertex; i++)
+            // Kiểm tra bậc của tất cả các đỉnh còn lại có bằng nhau và bằng 2 không
+            int minDegree = k - 1;
+            for (int i = 0; i < vertexCount; i++)
             {
-                if (degrees[i] != minDegree) return false;
+                if (i != universalVertex && degrees[i] != minDegree) return false;
             }
-
-            // Tìm số đỉnh của một đồ thị con đầy đủ
-            k = minDegree + 1;
 
             // Tìm số bản sao của đồ thị con đầy đủ
             int edgeSum = degrees.Sum() / 2; // Tổng số cạnh của đồ thị
@@ -145,6 +139,104 @@ namespace GraphTheory
             return true;
         }
 
+        // Kiểm tra xem 1 đỉnh con có kề với các đỉnh trong các list khác hay không
+        bool IsElementAdjacencyToAll(List<List<int>> list, int currentIndex, int element)
+        {
+            var data = adjMatrix.Data;
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (i == currentIndex) continue;
+
+                bool check = false;
+                for (int j = 0; j < list[i].Count; j++)
+                {
+                    if (data[element, list[i][j]] != 0)
+                    {
+                        check = true;
+                        break;
+                    }
+                }
+
+                if (check == true) continue;
+                else return false;
+            }
+
+            return true;
+        }
+
+        private bool IsKPartiteGraph(out int k, out List<List<int>> partiteList)
+        {
+
+            // Khởi tạo params
+            k = 0;
+            partiteList = new List<List<int>>();
+
+            var vertexCount = adjMatrix.VertexCount;
+            var data = adjMatrix.Data;
+
+            // Khởi tạo partite đầu tiên chứa đỉnh 0
+            var firstPartite = new List<int> { 0 };
+            partiteList.Add(firstPartite);
+            k++;
+
+            // Vòng lặp qua tất cả các đỉnh còn lại
+            for (int i = 1; i < vertexCount; i++)
+            {
+                // Mảng bool để kiểm tra đỉnh có kề với partite không
+                bool[] checkAdjacencyPartite = new bool[partiteList.Count];
+                for (int j = 0; j < checkAdjacencyPartite.Length; j++)
+                {
+                    checkAdjacencyPartite[j] = false;
+                }
+
+                // Vòng lặp qua tất cả các partite đã có
+                for (int m = 0; m < partiteList.Count; m++)
+                {
+                    for (int n = 0; n < partiteList[m].Count; n++)
+                    {
+                        var vertex = partiteList[m][n];
+
+                        // Nếu có cạnh nối với đỉnh i cần kiểm tra
+                        if (data[i, vertex] != 0)
+                        {
+                            checkAdjacencyPartite[m] = true;
+                            break;
+                        }
+                    }
+                }
+
+                // Nếu tất cả các đỉnh trong partie hiện tại đều kể với đỉnh i
+                if (checkAdjacencyPartite.All(x => x == true))
+                {
+                    var partite = new List<int> { i };
+                    partiteList.Add(partite);
+                    k++;
+                }
+                else
+                {
+                    var partieIndex = Array.FindIndex(checkAdjacencyPartite, x => x == false);
+                    partiteList[partieIndex].Add(i);
+                }
+            }
+
+            // Vòng lặp kiểm tra xem mỗi đỉnh trong từng partie có kề với tất cả các partie khác hay không
+            for (int i = 0; i < partiteList.Count; i++)
+            {
+                for (int j = 0; j < partiteList[i].Count; j++)
+                {
+                    int vertexToCheck = partiteList[i][j];
+
+                    if (!IsElementAdjacencyToAll(partiteList, i, vertexToCheck))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
         public void Implement()
         {
             // Kiểm tra đồ thị có cạnh bội không
@@ -172,14 +264,32 @@ namespace GraphTheory
             };
 
             // Kiểm tra đồ thị cối xay gió
-            if (IsWindmillGraph(out int kWindmill, out int nWindmill))
-                Console.WriteLine($"Do thi coi xay gio: Wd({kWindmill},{nWindmill})");
+            if (IsWindmillGraph(out int nWindmill))
+                Console.WriteLine($"Do thi coi xay gio: Wd(3,{nWindmill})");
             else Console.WriteLine("Do thi coi xay gio: Khong");
 
             // Kiểm tra đồ thị barbell
             if (IsBarbellGraph(out int nBarbell))
                 Console.WriteLine($"Do thi barbell: Bac {nBarbell}");
             else Console.WriteLine("Do thi barbell: Khong");
+            // Kiểm tra đồ thị barbell
+
+            if (IsKPartiteGraph(out int kPartite, out List<List<int>> partiteList))
+            {
+                Console.Write($"Do thi k-phân: {kPartite}-partite ");
+                foreach (List<int> partite in partiteList)
+                {
+                    Console.Write("{");
+                    for (int i = 0; i < partite.Count; i++)
+                    {
+                        if (i == partite.Count - 1) Console.Write(partite[i]);
+                        else Console.Write($"{partite[i]}, ");
+                    }
+                    Console.Write("} ");
+                }
+                Console.WriteLine();
+            }
+            else Console.WriteLine("Do thi k-phân: Khong");
         }
 
     }
