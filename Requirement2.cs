@@ -1,230 +1,155 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace GraphTheory
 {
-    public class Requirement_2
+    class Requirement_2
     {
+        private readonly AdjacencyList adjList;
         private readonly AdjacencyMatrix adjMatrix;
-        private readonly AjacencyList adjList;
 
         public Requirement_2(string filePath)
         {
-            adjList = new AjacencyList(filePath);
+            adjList = new AdjacencyList(filePath);
             adjMatrix = new AdjacencyMatrix(adjList);
         }
 
-        //Kiểm tra đồ thị có cạnh khuyên hay không
-        public static bool isGraphHasNoLoop(AdjacencyMatrix adjacencyMatrix)
+        private int BfsUtill(int u, bool[] visited)
         {
-            for (int i = 0; i < adjacencyMatrix.VertexCount && adjacencyMatrix.Data[i, i] == 0; i++)
-                if (i < adjacencyMatrix.VertexCount)
-                    return false;
-            return true;
-        }
-
-        //Kiểm tra đồ thị có cạnh bội hay không
-        public static bool IsMultiGraph(AjacencyList ajacencyList)
-        {
-            for (int i = 0; i < ajacencyList.VertexCount; i++)
+            int counter = 0;
+            Queue<int> queue = new Queue<int>();
+            visited[u] = true;
+            queue.Enqueue(u);
+            while (queue.Count != 0)
             {
-                var edges = ajacencyList.GetEdges(i);
-
-                // Kiểm tra từng đỉnh cuối trong list các cạnh xem có bị lặp lại hay không?
-                for (int j = 0; j < edges.Count; j++)
+                int curr = queue.Dequeue();
+                counter++;
+                for (int i = 0; i < adjMatrix.VertexCount; i++)
                 {
-                    for (int k = 0; k < edges.Count; k++)
+                    if (visited[i] == false && adjMatrix.Data[curr, i] > 0)
                     {
-                        if (edges[j].Destination == edges[k].Destination)
-                            return true;
+                        queue.Enqueue(i);
+                        visited[i] = true;
                     }
                 }
             }
-            return false;
+            return counter;
         }
-
-        //Kiểm tra đồ thị vô hướng
-        public static bool IsUndirectGraph(AdjacencyMatrix adjacencyMatrix)
-        {
-            bool isSymmectric = true;
-
-            for (int i = 0; i < adjacencyMatrix.VertexCount; i++)
-            {
-                for (int j = i + 1; j < adjacencyMatrix.VertexCount && adjacencyMatrix.Data[i, j] == adjacencyMatrix.Data[j, i]; j++)
-                    if (j < adjacencyMatrix.VertexCount)
-                        isSymmectric = false;
-            }
-            return true;
-        }
-
-        //Kiểm tra đồ thị liên thông hay không liên thông
-        public static int Connected(AdjacencyMatrix adjacencyMatrix)
-        {
-            bool[] marked = new bool[adjacencyMatrix.VertexCount];
-            bool connected = true;
-            int Dem = 0;
-
-            //Khởi tạo mọi đỉnh chưa đánh dấu
-            for (int i = 0; i < adjacencyMatrix.VertexCount; i++)
-            {
-                marked[i] = false;
-                marked[0] = true;
-                Dem++;
-            }
-            do
-            {
-                connected = true;
-                for (int i = 0; i < adjacencyMatrix.VertexCount; i++)
-                {
-                    if (marked[i] == true)
-                    {
-                        for (int j = 0; j < adjacencyMatrix.VertexCount; j++)
-                        {
-                            if (marked[j] == false && adjacencyMatrix.Data[i, j] > 0)
-                            {
-                                marked[j] = true;
-                                connected = true;
-                                Dem++;
-                                if (Dem == adjacencyMatrix.VertexCount)
-                                    return 1;
-                            }
-                        }
-                    }
-                }
-            }
-            while (connected == false);
-            return 0;
-        }
-
 
         //Kiểm tra đồ thị liên thông mạnh, liên thông một phần, liên thông yếu
-        public static int CheckConnected(AdjacencyMatrix adjacencyMatrix)
+        private void CheckConnected()
         {
-            int a = Connected(adjacencyMatrix);
-
-            if (a == 0)
+            bool a = Validation.Connected(adjMatrix);
+            if (a == false)
             {
                 Console.WriteLine("Đồ thị không liên thông");
-                return 0;
             }
             else
             {
-                bool strongly = true;
-                //Kiểm tra đồ thị liên thông mạnh hay không?
-                for (int i = 0; i < adjacencyMatrix.VertexCount; i++)
+                bool[] visited = new bool[adjMatrix.VertexCount];
+                int Dem = 0;
+                for (int i = 0; i < adjMatrix.VertexCount; i++)
                 {
-                    for (int j = 0; j < adjacencyMatrix.VertexCount; j++)
+                    if (BfsUtill(i, visited) == adjMatrix.VertexCount)
                     {
-                        if (adjacencyMatrix.Data[i, j] != 1)
-                        {
-                            strongly = false;
-                            break;
-                        }
+                        Dem++;
                     }
-                    if (!strongly)
+                    for (i = 0; i < adjMatrix.VertexCount; i++)
                     {
-                        break;
+                        visited[i] = false;
                     }
                 }
 
-                //Kiểm tra đồ thị liên thông một phần
-                bool uppertri = true;
-                for (int i = 0; i < adjacencyMatrix.VertexCount; i++)
-                {
-                    for (int j = 0; j < adjacencyMatrix.VertexCount; j++)
-                    {
-                        if ((i > j && adjacencyMatrix.Data[i, j] == 0) || (i < j && adjacencyMatrix.Data[i, j] == 0))
-                        {
-                            uppertri = false;
-                            break;
-                        }
-                    }
-                    if (!uppertri)
-                    {
-                        break;
-                    }
-                }
-
-                if (strongly)
+                if (Dem == adjMatrix.VertexCount)
                 {
                     Console.WriteLine("Đồ thị liên thông mạnh");
-                    return 0;
                 }
 
-                if (uppertri)
+                if (Dem > 0 && Dem < adjMatrix.VertexCount)
                 {
                     Console.WriteLine("Đồ thị liên thông một phần");
-                    return 0;
                 }
                 else
                 {
                     Console.WriteLine("Đồ thị liên thông yếu");
-                    return 0;
                 }
             }
         }
 
-        //Duyệt đồ thị bằng BFS
-        public void BFS(AdjacencyMatrix adj, int i, int solt, int[] chuaxet, int[] Queue)
+        private void BFS(int u, int solt, int[] visited)
         {
-            int u;
-            int src, des;
-            src = 1; des = 1;
-
-            Queue[des] = i;
-            chuaxet[i] = solt;
-            while (src <= des)
+            Queue<int> queue = new Queue<int>();
+            visited[u] = solt;
+            queue.Enqueue(u);
+            while (queue.Count != 0)
             {
-                u = Queue[src];
-                src = src + 1;
-                for (int j = 1; j < adj.VertexCount; j++)
+                int curr = queue.Dequeue();
+                for (int i = 0; i < adjMatrix.VertexCount; i++)
                 {
-                    if (adj.Data[u, j] == 1 && chuaxet[j] == 0)
+                    if (visited[i] == 0 && adjMatrix.Data[curr, i] > 0)
                     {
-                        des = des + 1;
-                        Queue[des] = j;
-                        chuaxet[j] = solt;
+                        queue.Enqueue(i);
+                        visited[i] = solt;
                     }
                 }
             }
-
         }
 
         //Đếm thành phần liên thông mạnh
-        public static void ConnectedComponent(AdjacencyMatrix adj)
+        private void ConnectedComponent()
         {
-            int[] chuaxet = new int[adj.VertexCount];
-            int[] Queue = new int[adj.VertexCount];
             int i;
             int solt = 0;
+            int[] marked = new int[adjList.VertexCount];
 
-            //khởi tạo giá trị ban đầu cho mảng chuaxet
-            for (i = 1; i < adj.VertexCount; i++)
+            //khởi tạo giá trị ban đầu cho mảng marked
+            for (i = 1; i < adjList.VertexCount; i++)
             {
-                chuaxet[i] = 0;
+                marked[i] = 0;
             }
 
-            for (i = 1; i < adj.VertexCount; i++)
+            //Đếm số thành phần liên thông 
+            for (i = 1; i < adjList.VertexCount; i++)
             {
-                if (chuaxet[i] == 0)
+                if (marked[i] == 1)
                 {
                     solt = solt + 1;
-                    BFS(adj, i, solt, chuaxet, Queue);
+                    BFS(i, solt, marked);
                 }
             }
 
+            //In thành phần liên thông mạnh 
             for (i = 1; i < solt; i++)
             {
                 Console.Write($"Thành phần liên thông mạnh {i}: ");
-                Console.Write("ertw");
-
+                for (int j = 1; j < adjList.VertexCount; j++)
+                {
+                    if (marked[j] == 1)
+                    {
+                        Console.Write(j + " ");
+                    }
+                }
+                Console.WriteLine();
             }
-
         }
 
+        public void Connection()
+        {
+            // Kiểm tra điều kiện của đồ thị
+            bool Undirected = Validation.IsUndirectedGraph(adjMatrix);
+            bool Loop = Validation.IsGraphHasLoops(adjMatrix);
+            bool Multi = Validation.IsMultiGraph(adjList);
+
+            if (Undirected == false && Loop == false && Multi == false)
+            {
+                CheckConnected();
+                ConnectedComponent();
+            }
+            else
+            {
+                Console.WriteLine("Đồ thị không thoả yêu cầu của điều kiện");
+            }
+        }
 
     }
 }
-
-
