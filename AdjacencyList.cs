@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GraphTheory
 {
@@ -57,6 +58,15 @@ namespace GraphTheory
         public List<Edge> GetEdges(int source)
         {
             return Data[source];
+        }
+
+        // Lấy số các cạnh ( TH Vô hướng)
+        public int GetTotalEdges() {
+            int total = 0;
+            foreach ( var edge in Data) {
+                total += edge.Count;
+            }
+            return total / 2;
         }
     }
 
