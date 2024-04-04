@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace GraphTheory
 {
     class Validation
@@ -22,6 +24,9 @@ namespace GraphTheory
             return false;
         }
 
+        // Kiểm tra đồ thị vô hướng
+        // TRUE đồ thị vô hướng
+        // FALSE đồ thị có hướng
         public static bool IsUndirectedGraph(AdjacencyMatrix adjacencyMatrix)
         {
             int i, j;
@@ -44,6 +49,31 @@ namespace GraphTheory
             return false;
         }
 
+        // Kiem tra do thi lien thong
+        // Yeu cau: do thi vo huong
+        public static bool IsBiConnectedGraph(AdjacencyMatrix adjacencyMatrix) {
+            // Đánh dáu các đỉnh cần thăm
+            bool[] isVisited = new bool[adjacencyMatrix.VertexCount];
+            // Khởi tạo danh sách đỉnh cần thăm
+            Stack<int> stack = new();
+            stack.Push(0);
+            // Duyệt đỉnh
+            while (stack.Count > 0) {
+                int cur = stack.Pop();
+                isVisited[cur] = true;
+                for(int i = 0; i < adjacencyMatrix.VertexCount; i++) {
+                    if (adjacencyMatrix.Data[cur, i] != 0 && !isVisited[i]) {
+                        stack.Push(i);
+                    }
+                }
+            }
+            for(int i = 0;i < adjacencyMatrix.VertexCount; i++) {
+                if (!isVisited[i])
+                    return false;
+            }
+            return true;
+        }
+        
         //Chuyển ma trận kề có hướng thành ma trận kề vô hướng 
         public static void TranslateGraph(AdjacencyMatrix adjacencyMatrix, int[,] UndirectedGraph)
         {

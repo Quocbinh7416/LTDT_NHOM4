@@ -13,4 +13,12 @@
     <Folder Include="Requirement2\" />
     <Folder Include="Requirement3\" />
   </ItemGroup>
+    <ItemGroup>
+    <None Update="Requirement1\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Requirement5\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
