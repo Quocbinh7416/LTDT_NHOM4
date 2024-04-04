@@ -73,5 +73,68 @@ namespace GraphTheory
             }
             return true;
         }
+        
+        //Chuyển ma trận kề có hướng thành ma trận kề vô hướng 
+        public static void TranslateGraph(AdjacencyMatrix adjacencyMatrix, int[,] UndirectedGraph)
+        {
+            int N_adjacencyMatrix = adjacencyMatrix.VertexCount;
+
+            for (int i = 0; i < N_adjacencyMatrix; i++)
+            {
+                for (int j = 0; j < N_adjacencyMatrix; j++)
+                {
+                    if (adjacencyMatrix.Data[i, j] != 0)
+                    {
+                        UndirectedGraph[i, j] = adjacencyMatrix.Data[i, j];
+                        UndirectedGraph[j, i] = adjacencyMatrix.Data[i, j];
+                    }
+                }
+            }
+        }
+
+        //Kiểm tra đồ thị liên thông hay không liên thông
+        public static bool Connected(AdjacencyMatrix adjacencyMatrix)
+        {
+            int N_adjacencyMatrix = adjacencyMatrix.VertexCount;
+            int[,] UndirectedGraph = new int[N_adjacencyMatrix, N_adjacencyMatrix];
+            bool[] marked = new bool[adjacencyMatrix.VertexCount];
+            
+            int Dem = 0;
+
+            //Chuyển đồ thị vô hướng thành đồ thị có hướng
+            TranslateGraph(adjacencyMatrix, UndirectedGraph);
+
+            //Khởi tạo mọi đỉnh chưa đánh dấu
+            for (int i = 0; i < UndirectedGraph.Length; i++)
+            {
+                marked[i] = false;
+                marked[0] = true;
+            }
+
+            bool connect = true;
+            do
+            {
+                connect = true;
+                for (int i = 0; i < UndirectedGraph.Length; i++)
+                {
+                    if (marked[i] == true)
+                    {
+                        for (int j = 0; j < UndirectedGraph.Length; j++)
+                        {
+                            if (marked[j] == false && UndirectedGraph[i, j] > 0)
+                            {
+                                marked[j] = true;
+                                connect = true;
+                                Dem++;
+                                if (Dem == adjacencyMatrix.VertexCount)
+                                    return true;
+                            }
+                        }
+                    }
+                }
+            }
+            while (connect == false);
+            return false;
+        }
     }
 }
