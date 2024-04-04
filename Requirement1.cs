@@ -243,7 +243,7 @@ namespace GraphTheory
             if (Validation.IsMultiGraph(adjList))
             {
                 Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi khong co canh boi");
+                Console.WriteLine("Do thi input khong phai la do thi khong co canh boi");
                 return;
             };
 
@@ -251,7 +251,7 @@ namespace GraphTheory
             if (!Validation.IsUndirectedGraph(adjMatrix))
             {
                 Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi vo huong");
+                Console.WriteLine("Do thi input khong phai la do thi vo huong");
                 return;
             };
 
@@ -259,7 +259,7 @@ namespace GraphTheory
             if (!Validation.IsGraphHasLoops(adjMatrix))
             {
                 Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi khong co canh khuyen");
+                Console.WriteLine("Do thi input khong phai la do thi khong co canh khuyen");
                 return;
             };
 
