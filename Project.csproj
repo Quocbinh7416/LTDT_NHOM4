@@ -5,4 +5,12 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Requirement2\" />
+    <None Remove="Requirement3\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Requirement2\" />
+    <Folder Include="Requirement3\" />
+  </ItemGroup>
 </Project>
