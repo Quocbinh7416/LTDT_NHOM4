@@ -62,7 +62,11 @@ namespace GraphTheory
             requirement3.Prim(Source);
             requirement3.KruskalAL();
         }
-        public static void Requirement4() { }
+        public static void Requirement4() 
+        {
+            var requirement4 = new Requirement4("Requirement4/Matrix_4.txt");
+            requirement1.Implement();
+        }
         public static void Requirement5() { }
     }
 }
