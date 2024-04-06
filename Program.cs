@@ -18,11 +18,11 @@ namespace GraphTheory
             Console.WriteLine("ĐÒ ÁN MÔN HỌC NHÓM 4");
             Console.WriteLine("---------------------------------------");
             Console.WriteLine("Vui lòng chọn yêu cầu");
-            Console.WriteLine("Nhấm 1 - Yêu cầu 1: Nhận diện một số dạng đồ thị đặc biệt");
-            Console.WriteLine("Nhấm 2 - Yêu cầu 2: Xác định thành phần liên thông mạnh");
-            Console.WriteLine("Nhấm 3 - Yêu cầu 3: Tìm cây khung nhỏ nhất");
-            Console.WriteLine("Nhấm 4 - Yêu cầu 4: Tìm đường đi ngắn nhấ");
-            Console.WriteLine("Nhấm 5 - Yêu cầu 5: Tìm chu trình hoặc đường đi Euler");
+            Console.WriteLine("Nhấn 1 - Yêu cầu 1: Nhận diện một số dạng đồ thị đặc biệt");
+            Console.WriteLine("Nhấn 2 - Yêu cầu 2: Xác định thành phần liên thông mạnh");
+            Console.WriteLine("Nhấn 3 - Yêu cầu 3: Tìm cây khung nhỏ nhất");
+            Console.WriteLine("Nhấn 4 - Yêu cầu 4: Tìm đường đi ngắn nhất");
+            Console.WriteLine("Nhấn 5 - Yêu cầu 5: Tìm chu trình hoặc đường đi Euler");
             _ = int.TryParse(Console.ReadLine(), out int index);
             while (index < 1 || index > 5) {
                 Console.WriteLine("Vui lòng nhập từ 1 - 5");
