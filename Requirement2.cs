@@ -1,5 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.Metrics;
+using System.Reflection;
+using System.Reflection.Metadata;
+using System.Runtime.ConstrainedExecution;
 
 namespace GraphTheory
 {
@@ -17,18 +22,19 @@ namespace GraphTheory
         private int BfsUtill(int u, bool[] visited)
         {
             int counter = 0;
-            Queue<int> queue = new Queue<int>();
+            Stack<int> stack = new();
+            stack.Push(u);
             visited[u] = true;
-            queue.Enqueue(u);
-            while (queue.Count != 0)
+            // Duyệt đỉnh
+            while (stack.Count > 0)
             {
-                int curr = queue.Dequeue();
+                int cur = stack.Pop();
                 counter++;
                 for (int i = 0; i < adjMatrix.VertexCount; i++)
                 {
-                    if (visited[i] == false && adjMatrix.Data[curr, i] > 0)
+                    if (adjMatrix.Data[cur, i] != 0 && visited[i] == false)
                     {
-                        queue.Enqueue(i);
+                        stack.Push(i);
                         visited[i] = true;
                     }
                 }
@@ -39,35 +45,42 @@ namespace GraphTheory
         //Kiểm tra đồ thị liên thông mạnh, liên thông một phần, liên thông yếu
         private void CheckConnected()
         {
+            bool[] visited = new bool[adjMatrix.VertexCount];
+            for (int i = 0; i < visited.Length; i++)
+            {
+                visited[i] = false;
+            }
+
             bool a = Validation.Connected(adjMatrix);
+            int Dem = 0;
             if (a == false)
             {
                 Console.WriteLine("Đồ thị không liên thông");
             }
             else
             {
-                bool[] visited = new bool[adjMatrix.VertexCount];
-                int Dem = 0;
                 for (int i = 0; i < adjMatrix.VertexCount; i++)
                 {
                     if (BfsUtill(i, visited) == adjMatrix.VertexCount)
                     {
                         Dem++;
                     }
-                    for (i = 0; i < adjMatrix.VertexCount; i++)
+                    for (int j = 0; j < visited.Length; j++)
                     {
-                        visited[i] = false;
+                        visited[j] = false;
                     }
                 }
 
-                if (Dem == adjMatrix.VertexCount)
+                if (Dem > 0)
                 {
-                    Console.WriteLine("Đồ thị liên thông mạnh");
-                }
-
-                if (Dem > 0 && Dem < adjMatrix.VertexCount)
-                {
-                    Console.WriteLine("Đồ thị liên thông một phần");
+                    if (Dem == adjMatrix.VertexCount)
+                    {
+                        Console.WriteLine("Đồ thị liên thông mạnh");
+                    }
+                    if (Dem < adjMatrix.VertexCount)
+                    {
+                        Console.WriteLine("Đồ thị liên thông một phần");
+                    }
                 }
                 else
                 {
@@ -78,17 +91,18 @@ namespace GraphTheory
 
         private void BFS(int u, int solt, int[] visited)
         {
-            Queue<int> queue = new Queue<int>();
+            Stack<int> stack = new();
+            stack.Push(u);
+            // Duyệt đỉnh
             visited[u] = solt;
-            queue.Enqueue(u);
-            while (queue.Count != 0)
+            while (stack.Count > 0)
             {
-                int curr = queue.Dequeue();
+                int cur = stack.Pop();
                 for (int i = 0; i < adjMatrix.VertexCount; i++)
                 {
-                    if (visited[i] == 0 && adjMatrix.Data[curr, i] > 0)
+                    if (adjMatrix.Data[cur, i] != 0 && visited[i] == 0)
                     {
-                        queue.Enqueue(i);
+                        stack.Push(i);
                         visited[i] = solt;
                     }
                 }
@@ -103,15 +117,15 @@ namespace GraphTheory
             int[] marked = new int[adjList.VertexCount];
 
             //khởi tạo giá trị ban đầu cho mảng marked
-            for (i = 1; i < adjList.VertexCount; i++)
+            for (i = 0; i < adjList.VertexCount; i++)
             {
                 marked[i] = 0;
             }
 
             //Đếm số thành phần liên thông 
-            for (i = 1; i < adjList.VertexCount; i++)
+            for (i = 0; i < adjList.VertexCount; i++)
             {
-                if (marked[i] == 1)
+                if (marked[i] == 0)
                 {
                     solt = solt + 1;
                     BFS(i, solt, marked);
@@ -119,12 +133,12 @@ namespace GraphTheory
             }
 
             //In thành phần liên thông mạnh 
-            for (i = 1; i < solt; i++)
+            for (i = 1; i <= solt; i++)
             {
-                Console.Write($"Thành phần liên thông mạnh {i}: ");
-                for (int j = 1; j < adjList.VertexCount; j++)
+                Console.Write($"Thành phần liên thông mạnh thứ {i}: ");
+                for (int j = 0; j < adjList.VertexCount; j++)
                 {
-                    if (marked[j] == 1)
+                    if (marked[j] == i)
                     {
                         Console.Write(j + " ");
                     }
@@ -135,20 +149,31 @@ namespace GraphTheory
 
         public void Connection()
         {
-            // Kiểm tra điều kiện của đồ thị
-            bool Undirected = Validation.IsUndirectedGraph(adjMatrix);
-            bool Loop = Validation.IsGraphHasLoops(adjMatrix);
-            bool Multi = Validation.IsMultiGraph(adjList);
+            // Kiểm tra đồ thị có cạnh bội không
+            if (Validation.IsMultiGraph(adjList))
+            {
+                Console.Write(Constant.GraphNotMeetRequirement);
+                Console.WriteLine("Do thi khong co canh boi");
+                return;
+            };
 
-            if (Undirected == false && Loop == false && Multi == false)
+            // Kiểm tra đồ thị có vô hướng hay không
+            if (Validation.IsUndirectedGraph(adjMatrix))
             {
-                CheckConnected();
-                ConnectedComponent();
-            }
-            else
+                Console.Write(Constant.GraphNotMeetRequirement);
+                Console.WriteLine("Do thi co huong");
+                return;
+            };
+
+            // Kiểm tra đồ thị có cạnh khuyên không
+            if (!Validation.IsGraphHasLoops(adjMatrix))
             {
-                Console.WriteLine("Đồ thị không thoả yêu cầu của điều kiện");
-            }
+                Console.Write(Constant.GraphNotMeetRequirement);
+                Console.WriteLine("Do thi khong co canh khuyen");
+                return;
+            };
+            CheckConnected();
+            ConnectedComponent();
         }
 
     }

@@ -75,7 +75,7 @@ namespace GraphTheory
         }
         
         //Chuyển ma trận kề có hướng thành ma trận kề vô hướng 
-        public static void TranslateGraph(AdjacencyMatrix adjacencyMatrix, int[,] UndirectedGraph)
+        public static int[,] TranslateGraph(AdjacencyMatrix adjacencyMatrix, int[,] UndirectedGraph)
         {
             int N_adjacencyMatrix = adjacencyMatrix.VertexCount;
 
@@ -90,6 +90,7 @@ namespace GraphTheory
                     }
                 }
             }
+            return UndirectedGraph;
         }
 
         //Kiểm tra đồ thị liên thông hay không liên thông
@@ -97,44 +98,34 @@ namespace GraphTheory
         {
             int N_adjacencyMatrix = adjacencyMatrix.VertexCount;
             int[,] UndirectedGraph = new int[N_adjacencyMatrix, N_adjacencyMatrix];
-            bool[] marked = new bool[adjacencyMatrix.VertexCount];
+            bool[] isVisited = new bool[adjacencyMatrix.VertexCount];
             
-            int Dem = 0;
-
             //Chuyển đồ thị vô hướng thành đồ thị có hướng
-            TranslateGraph(adjacencyMatrix, UndirectedGraph);
-
-            //Khởi tạo mọi đỉnh chưa đánh dấu
-            for (int i = 0; i < UndirectedGraph.Length; i++)
+            UndirectedGraph = TranslateGraph(adjacencyMatrix, UndirectedGraph);
+            
+            // Khởi tạo danh sách đỉnh cần thăm
+            Stack<int> stack = new();
+            stack.Push(0);
+            // Duyệt đỉnh
+            while (stack.Count > 0)
             {
-                marked[i] = false;
-                marked[0] = true;
-            }
-
-            bool connect = true;
-            do
-            {
-                connect = true;
-                for (int i = 0; i < UndirectedGraph.Length; i++)
+                int cur = stack.Pop();
+                isVisited[cur] = true;
+                for (int i = 0; i < N_adjacencyMatrix; i++)
                 {
-                    if (marked[i] == true)
+                    if (UndirectedGraph[cur, i] != 0 && !isVisited[i])
                     {
-                        for (int j = 0; j < UndirectedGraph.Length; j++)
-                        {
-                            if (marked[j] == false && UndirectedGraph[i, j] > 0)
-                            {
-                                marked[j] = true;
-                                connect = true;
-                                Dem++;
-                                if (Dem == adjacencyMatrix.VertexCount)
-                                    return true;
-                            }
-                        }
+                        stack.Push(i);
                     }
                 }
             }
-            while (connect == false);
-            return false;
+            for (int i = 0; i < adjacencyMatrix.VertexCount; i++)
+            {
+                if (!isVisited[i])
+                    return false;
+            }
+            return true;
+
         }
     }
 }
