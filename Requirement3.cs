@@ -43,7 +43,7 @@ namespace GraphTheory
 
             //Khởi tạo các biến cần thiết
             int nT = adjMatrix.VertexCount - 1;
-            EDGE[] T = new EDGE[nT];
+            List<EDGE> edgesResult = new ();
 
             bool[] marked = new bool[adjMatrix.VertexCount];
             for (int v = 0; v < adjMatrix.VertexCount; v++)
@@ -52,7 +52,7 @@ namespace GraphTheory
             }
             marked[source] = true;
             //Thực hiện giải thuật
-            for (int i = 0; i < nT; i++)
+            while (nT < adjMatrix.VertexCount - 1)
             {
                 EDGE edgeMax = new EDGE();
                 int nMaxWeight = 0;
@@ -71,45 +71,41 @@ namespace GraphTheory
                                     edgeMax.W = w;
                                     edgeMax.Weight = adjMatrix.Data[v, w];
                                     nMaxWeight = adjMatrix.Data[v, w];
-                                    marked[w] = true;
                                 }
                             }
                         }
                     }
-                    T[i] = edgeMax;
+                    edgesResult.Add(edgeMax);
+                    marked[w] = true;
                 }
             }
             //Tính trọng số của cây khung
-            int S = 0;
-            for (int i = 0; i < T.Length; i++)
-            {
-                S = S + T[i].Weight;
-            }
-
+            int Max = 0;
             //In cây khung từ T
             Console.WriteLine("Giải thuật Prim");
             Console.WriteLine("Tập cạnh của cây khung");
-            for (int i = 0; i < adjMatrix.VertexCount - 1; i++)
+            for (int i = 0; i < edgesResult.Count; i++)
             {
-                Console.WriteLine(T[i].V + " - " + T[i].W + ": " + adjMatrix.Data[T[i].V, T[i].W]);
+                Console.WriteLine(edgesResult[i].V + " - " + edgesResult[i].W + ": " + adjMatrix.Data[edgesResult[i].V, edgesResult[i].W]);
+                Max += edgesResult[i].Weight;
             }
-            Console.WriteLine($"Trọng số của cây khung: {S}");
+            Console.WriteLine($"Trọng số của cây khung: {Max}");
         }
 
         private List<EDGE> InitListEdge(AdjacencyMatrix adjacencyMatrix)
         {
             List<EDGE> listEdges = new();
-            int nEdgeCount = 0;
             for (int i = 0; i < adjMatrix.VertexCount; i++)
             {
                 for (int j = 0; j < adjMatrix.VertexCount; j++)
                 {
                     if (adjMatrix.Data[i, j] > 0)
                     {
-                        listEdges[nEdgeCount].V = i;
-                        listEdges[nEdgeCount].W = j;
-                        listEdges[nEdgeCount].Weight = adjMatrix.Data[i, j];
-                        nEdgeCount++;
+                        EDGE edge = new EDGE ();
+                        edge.V = i;
+                        edge.W = j;
+                        edge.Weight = adjacencyMatrix.Data[i, j];
+                        listEdges.Add(edge);
                     }
                 }
             }
@@ -117,9 +113,8 @@ namespace GraphTheory
         }
 
         //Sắp xếp các cạnh giảm dần theo thứ tự về trọng số
-        private void SortListEdge()
+        private void SortListEdge(List<EDGE> listEdges)
         {
-            List<EDGE> listEdges = new();
             int nEdges = listEdges.Count;
             for (int i = 0; i < nEdges - 1; i++)
             {
@@ -135,58 +130,32 @@ namespace GraphTheory
             }
         }
 
-        //Kiểm tra cạnh có tạo thành chu trình không
-        private bool IsCricle(int Index, int[] label, EDGE[] listEdges)
+        private int Find(int x, List<int> label)
         {
-            int v = listEdges[Index].V;
-            int w = listEdges[Index].W;
-            int lab1;
-            int lab2;
-            if (label[v] == label[w])
+            while (label[x] != 1)
             {
-                return true;
+                x = label[x];
             }
-            else
+            return x;
+        }
+
+        //Kiểm tra cạnh có tạo thành chu trình không
+        private void Union(int v, int w, List<int> label)
+        {
+            if (label[v] != label[w])
             {
                 if (label[v] > label[w])
                 {
-                    lab1 = label[w];
-                    lab2 = label[v];
+                    label[w] += label[v];
+                    label[v] = w;
                 }
                 else
                 {
-                    lab1 = label[v];
-                    lab2 = label[w];
-                }
-
-                for (int i = 0; i < label.Length; i++)
-                {
-                    if (label[i] == lab2)
-                    {
-                        i = lab1;
-                    }
+                    label[v] += label[w];
+                    label[w] = v;
                 }
             }
-            return false;
         }
-
-        // Tinh so canh cua do thi
-        private int NumberListEdge(AdjacencyMatrix adjacencyMatrix)
-        {
-            int Count = 0;
-            for (int i = 0; i < adjMatrix.VertexCount; i++)
-            {
-                for (int j = 0; j < adjMatrix.VertexCount; j++)
-                {
-                    if (adjMatrix.Data[i, j] > 0)
-                    {
-                        Count++;
-                    }
-                }
-            }
-            return Count;
-        }
-
 
         //Giải thuật Krukal tìm cây khung lớn nhất
         public void KruskalAL()
@@ -208,56 +177,44 @@ namespace GraphTheory
                 return;
             };
 
-
-            EDGE[] T = new EDGE[adjMatrix.VertexCount - 1];
-            int nT = 0;
+            List<EDGE> edgesResult = new ();
 
             //Khởi tạo mảng chứa mọi cạnh của đồ thị
-            int nEdgeCount = 0;
-            int nlistEdge = NumberListEdge(adjMatrix);
-            EDGE[] listEdges = new EDGE[nEdgeCount];
+            List<EDGE> listEdges = new ();
 
-
-            int[] label = new int[adjMatrix.VertexCount];
-            for (int i = 0; i < label.Length; i++)
+            List<int> label = new();
+            for (int i = 0; i < label.Count; i++)
             {
                 label[i] = i;
             }
             InitListEdge(adjMatrix);
-            SortListEdge();
-
-            int eMaxIndex = 0;
-            while (nT < adjMatrix.VertexCount - 1)
+            SortListEdge(listEdges);
+            for (int eMaxIndex = 0; eMaxIndex < listEdges.Count; eMaxIndex++)
             {
-                EDGE MaxEgde = new EDGE();
-                if (eMaxIndex < nEdgeCount)
+                int v = Find(listEdges[eMaxIndex].V, label);
+                int w = Find(listEdges[eMaxIndex].W, label);
+
+                if (v != w)
                 {
-                    if (IsCricle(eMaxIndex, label, listEdges) == false)
-                    {
-                        MaxEgde.V = listEdges[eMaxIndex].V;
-                        MaxEgde.W = listEdges[eMaxIndex].W;
-                        MaxEgde.Weight = listEdges[eMaxIndex].Weight;
-                    }
-                    T[nT] = MaxEgde;
-                    eMaxIndex++;
+                    edgesResult.Add(listEdges[eMaxIndex]);
                 }
-                else
-                {
-                    break;
-                }
+                Union(v, w, label);
             }
+            
             //Tính trọng số của cây khung
             int S = 0;
-            for (int i = 0; i < T.Length; i++)
+            for (int i = 0; i < edgesResult.Count; i++)
             {
-                S = S + T[i].Weight;
+                var weight = edgesResult[i].Weight;
+                S += weight;
             }
 
+            //In cây khung từ T
             Console.WriteLine("Giải thuật Kruskal");
             Console.WriteLine("Tập cạnh của cây khung");
-            for (int i = 1; i < adjMatrix.VertexCount; i++)
+            for (int i = 0; i < edgesResult.Count; i++)
             {
-                Console.WriteLine(T[i].V + " - " + T[i].W + ": " + adjMatrix.Data[T[i].V, T[i].W]);
+                Console.WriteLine(edgesResult[i].V + " - " + edgesResult[i].W + ": " + adjMatrix.Data[edgesResult[i].V, edgesResult[i].W]);
             }
             Console.WriteLine($"Trọng số của cây khung: {S}");
         }
