@@ -107,7 +107,7 @@ namespace GraphTheory
             Console.Write(u + " ");
             for (int i = 0; i < TransGraph.GetLength(0); i++)
             {
-                if (adjMatrix.Data[u, i] != 0)
+                if (TransGraph[u, i] != 0)
                 {
                     if (visited[i] == 0)
                     {
