@@ -1,18 +1,16 @@
-using System;
+ using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
+using System.IO;   
 namespace GraphTheory
 {
 
     class Requirement4
     {
-            public void Floyd(string filepath)
-            {
+        public void Floyd(string filePath)
+        {
                 try
                 {
-                    string filePath = "your_file_path_here.txt"; // Provide the correct file path
-                                                                 // Kiểm tra xem tệp tin có tồn tại không
+          
                     if (File.Exists(filePath))
                     {
                         // Đọc tất cả các dòng từ tệp tin
