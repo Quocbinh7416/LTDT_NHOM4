@@ -1,9 +1,9 @@
-
+﻿
 namespace GraphTheory
 {
     public class Constant
 
     {
-        public const string GraphNotMeetRequirement = "Do thi duoc cho khong thoa yeu cau: ";
+        public const string GraphNotMeetRequirement = "Đồ thị được cho không thỏa yêu cầu: ";
     }
 }

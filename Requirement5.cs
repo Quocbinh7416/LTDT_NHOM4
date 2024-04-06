@@ -17,18 +17,20 @@ namespace Project {
         }
 
         public void KiemTraEuler() {
+            Console.WriteLine("Bắt đầu tìm chu trình hoặc đường đi Euler");
+            Console.WriteLine("--------------------------------------------------------");
             // Kiểm tra đồ thị có vô hướng hay không
             // Đồ thị có hướng -> return
             if (!Validation.IsUndirectedGraph(adjMatrix)) {
                 Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi co huong");
+                Console.WriteLine("Đồ thị nhập là đồ thị có hướng");
                 return;
             };
 
             // Kiem tra do thi vo huong lien thong
             if (!Validation.IsBiConnectedGraph(adjMatrix)) {
                 Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi khong lien thong");
+                Console.WriteLine("Đồ thị nhập là đồ thị không liên thông");
                 return;
             };
             // Lấy bậc của các đỉnh
@@ -42,13 +44,13 @@ namespace Project {
             //Console.WriteLine($"So dinh bac le: {oddVertexCount}");
             int casePath = 0;
             if(oddVertexCount.Count > 2) {
-                Console.WriteLine("Do thi khong Euler");
+                Console.WriteLine("Đồ thị không Euler");
                 return;
             } else if (oddVertexCount.Count == 0) {
-                Console.WriteLine("Do thi Euler");
+                Console.WriteLine("Đồ thị Euler");
                 casePath = 1;
             } else if(oddVertexCount.Count == 2) {
-                Console.WriteLine("Do thi nua Euler");
+                Console.WriteLine("Đồ thị nửa Euler");
                 casePath = 2;
             }
             List<int> vertexPath = new(0);
@@ -57,23 +59,23 @@ namespace Project {
                 case 1:
                     vertexPath = EulerCircuitsFinding(adjMatrix);
                     if (vertexPath.Count == edgeCount + 1) {
-                        Console.Write("Chu trinh Euler:");
+                        Console.Write("Chu trình Euler:");
                         foreach (int i in vertexPath) {
                             Console.Write($" {i}");
                         }
                     } else {
-                        Console.Write("Khong co loi giai");
+                        Console.Write("Không có lời giải");
                     }
                     break;
                 case 2:
                     vertexPath = EulerPathFinding(adjMatrix, oddVertexCount);
                     if (vertexPath.Count == edgeCount + 1) {
-                        Console.Write("Duong di Euler:");
+                        Console.Write("Đường đi Euler:");
                         foreach (int i in vertexPath) {
                             Console.Write($" {i}");
                         }
                     } else {
-                        Console.Write("Khong co loi giai");
+                        Console.Write("Không có lời giải");
                     }
                     break;
                 default:
