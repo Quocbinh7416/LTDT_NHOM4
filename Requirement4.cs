@@ -5,29 +5,9 @@ using System.Runtime.InteropServices;
 namespace GraphTheory
 {
 
-    class Program1
+    class Requirement4
     {
-
-        class Requirement4
-        {
-            private readonly adjacencyList adjList;
-            private readonly adjacencyMatrix adjMatrix;
-
-            public Requirement4(string filePath)
-            {
-                adjList = new adjacencyList(filePath);
-                adjMatrix = new adjacencyMatrix(adjList);
-            }
-        }
-
-        class Program2
-        {
-            static void Floyd(string[] args)
-            {
-                Floyd();
-            }
-
-            static void Floyd()
+            public void Floyd(string filepath)
             {
                 try
                 {
@@ -42,9 +22,9 @@ namespace GraphTheory
                         int V = int.Parse(lines[0]);
 
                         // Khởi tạo danh sách kề và ma trận trọng số
-                       
-                            List<List<Tuple<int, int>>> adjacencyList = new List<List<Tuple<int, int>>>();
-                        
+
+                        List<List<Tuple<int, int>>> adjacencyList = new List<List<Tuple<int, int>>>();
+
                         // Đọc danh sách kề và trọng số từ tệp tin
                         for (int i = 1; i <= V; i++)
                         {
@@ -167,6 +147,6 @@ namespace GraphTheory
                     Console.WriteLine("Khong co duong di ngan nhat");
                 }
             }
-        }
+        
     }
 }
