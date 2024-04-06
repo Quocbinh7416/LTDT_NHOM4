@@ -6,7 +6,7 @@ namespace GraphTheory
 
     class Program
     {
-        static void Main(string[] args)
+        static void Floyd(string[] args)
         {
             try
             {
