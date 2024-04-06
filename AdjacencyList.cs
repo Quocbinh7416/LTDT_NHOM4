@@ -19,6 +19,13 @@ namespace GraphTheory
         // Khởi tạo danh sách kề
         public AdjacencyList(string filePath)
         {
+            using (StreamReader sr = new StreamReader(filePath)) 
+            {
+                Console.WriteLine("----------------------------");
+                Console.WriteLine("Đồ thị:");
+                Console.WriteLine(sr.ReadToEnd());
+                Console.WriteLine("----------------------------");
+            }
             using (StreamReader sr = new StreamReader(filePath))
             {
                 int.TryParse(sr.ReadLine(), out int n);
