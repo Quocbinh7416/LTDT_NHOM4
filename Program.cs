@@ -64,8 +64,8 @@ namespace GraphTheory
         }
         public static void Requirement4() 
         {
-            var requirement4 = new Requirement4("Requirement4/Matrix_4.txt");
-            requirement4.Implement();
+            var requirement4 = new Requirement4();
+            requirement4.Floyd("Requirement4/Matrix_4.txt);
         }
         public static void Requirement5() { }
     }
