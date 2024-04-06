@@ -10,8 +10,13 @@ namespace GraphTheory
         {
             try
             {
-                string filePath = @"D:\aDownload\GT Floyd Warshall\Matrix_4.txt"; // Đường dẫn tới tệp tin văn bản
-
+    class Requirement4 {
+        private readonly AdjacencyList adjList;
+        private readonly AdjacencyMatrix adjMatrix;
+        public Requirement4(string filePath) {
+            adjList = new AdjacencyList(filePath);
+            adjMatrix = new AdjacencyMatrix(adjList);
+                        }
                 // Kiểm tra xem tệp tin có tồn tại không
                 if (File.Exists(filePath))
                 {
