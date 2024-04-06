@@ -89,35 +89,60 @@ namespace GraphTheory
             }
         }
 
-        private void BFS(int u, int solt, int[] visited)
+        private int[,] Transpose(int[,] TransGraph, AdjacencyMatrix adjacencyMatrix)
         {
-            Stack<int> stack = new();
-            stack.Push(u);
-            // Duyệt đỉnh
-            visited[u] = solt;
-            while (stack.Count > 0)
+            for (int i = 0; i < adjMatrix.VertexCount; i++)
             {
-                int cur = stack.Pop();
-                for (int i = 0; i < adjMatrix.VertexCount; i++)
+                for (int j = 0; j < adjMatrix.VertexCount; j++)
                 {
-                    if (adjMatrix.Data[cur, i] != 0 && visited[i] == 0)
+                    TransGraph[i, j] = adjacencyMatrix.Data[j, i];
+                }
+            }
+            return TransGraph;
+        }
+
+        private void BFS(int u, int[] visited, int[,] TransGraph)
+        {
+            visited[u] = 1;
+            Console.Write(u + " ");
+            for (int i = 0; i < TransGraph.GetLength(0); i++)
+            {
+                if (adjMatrix.Data[u, i] != 0)
+                {
+                    if (visited[i] == 0)
                     {
-                        stack.Push(i);
-                        visited[i] = solt;
+                        BFS(i, visited, TransGraph);
                     }
                 }
             }
         }
 
+        private void BFS2(int u, int[] visited, Stack<int> stack)
+        {
+            visited[u] = 1;
+            for (int i = 0; i < adjMatrix.VertexCount; i++)
+            {
+                if (adjMatrix.Data[u, i] != 0)
+                {
+                    if (visited[i] == 0)
+                    {
+                        BFS2(i, visited, stack);
+                    }
+                }
+            }
+            stack.Push(u);
+        }
+
         //Đếm thành phần liên thông mạnh
         private void ConnectedComponent()
         {
-            int i;
-            int solt = 0;
-            int[] marked = new int[adjList.VertexCount];
-
+            int i, CSS;
+            CSS = 0;
+            int[] marked = new int[adjMatrix.VertexCount];
+            Stack<int> stack = new();
+            int[,] TransGraph = new int[adjMatrix.VertexCount, adjMatrix.VertexCount];
             //khởi tạo giá trị ban đầu cho mảng marked
-            for (i = 0; i < adjList.VertexCount; i++)
+            for (i = 0; i < marked.Length; i++)
             {
                 marked[i] = 0;
             }
@@ -127,23 +152,27 @@ namespace GraphTheory
             {
                 if (marked[i] == 0)
                 {
-                    solt = solt + 1;
-                    BFS(i, solt, marked);
+                    BFS2(i, marked, stack);
                 }
             }
 
-            //In thành phần liên thông mạnh 
-            for (i = 1; i <= solt; i++)
+            for (i = 0; i < marked.Length; i++)
             {
-                Console.Write($"Thành phần liên thông mạnh thứ {i}: ");
-                for (int j = 0; j < adjList.VertexCount; j++)
+                marked[i] = 0;
+            }
+
+            TransGraph = Transpose(TransGraph, adjMatrix);
+            while (stack.Count > 0)
+            {
+                int cur = stack.Peek();
+                stack.Pop();
+                if (marked[cur] == 0)
                 {
-                    if (marked[j] == i)
-                    {
-                        Console.Write(j + " ");
-                    }
+                    CSS++;
+                    Console.WriteLine($"Thanh phan lien thong manh thu {CSS}: ");
+                    BFS(cur, marked, TransGraph);
+                    Console.WriteLine();
                 }
-                Console.WriteLine();
             }
         }
 
