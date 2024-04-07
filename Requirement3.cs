@@ -42,7 +42,7 @@ namespace GraphTheory
             };
 
             //Khởi tạo các biến cần thiết
-            int nT = adjMatrix.VertexCount - 1;
+            int nT = 0;
             List<EDGE> edgesResult = new ();
 
             bool[] marked = new bool[adjMatrix.VertexCount];
@@ -52,18 +52,18 @@ namespace GraphTheory
             }
             marked[source] = true;
             //Thực hiện giải thuật
-            while (nT < adjMatrix.VertexCount - 1)
+            for (nT = 0; nT < adjMatrix.VertexCount - 1; nT++)
             {
                 EDGE edgeMax = new EDGE();
                 int nMaxWeight = 0;
 
-                for (int w = 0; w < adjMatrix.VertexCount; w++)
+                for (int v = 0; v < adjMatrix.VertexCount; v++)
                 {
-                    if (marked[w] == false)
+                    if (marked[v] == true)
                     {
-                        for (int v = 0; v < adjMatrix.VertexCount; v++)
+                        for (int w = 0; w < adjMatrix.VertexCount; w++)
                         {
-                            if (marked[v] == true && adjMatrix.Data[v, w] > 0)
+                            if (marked[w] == false && adjMatrix.Data[v, w] > 0)
                             {
                                 if (nMaxWeight == 0 || adjMatrix.Data[v, w] > nMaxWeight)
                                 {
@@ -71,13 +71,13 @@ namespace GraphTheory
                                     edgeMax.W = w;
                                     edgeMax.Weight = adjMatrix.Data[v, w];
                                     nMaxWeight = adjMatrix.Data[v, w];
+                                    marked[w] = true;
                                 }
                             }
                         }
                     }
-                    edgesResult.Add(edgeMax);
-                    marked[w] = true;
                 }
+                edgesResult.Add(edgeMax);
             }
             //Tính trọng số của cây khung
             int Max = 0;
