@@ -178,11 +178,18 @@ namespace GraphTheory
 
         public void Connection()
         {
-            // Kiểm tra đồ thị có cạnh bội không
+            // Kiểm tra đồ thị có cạnh khuyên không
+            if (!Validation.IsGraphHasLoops(adjMatrix))
+            {
+                Console.Write(Constant.GraphNotMeetRequirement);
+                Console.WriteLine("Do thi input khong phai la do thi khong co canh khuyen");
+                return;
+            };
+
             if (Validation.IsMultiGraph(adjList))
             {
                 Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi khong co canh boi");
+                Console.WriteLine("Do thi input khong phai la do thi khong co canh boi");
                 return;
             };
 
@@ -190,17 +197,11 @@ namespace GraphTheory
             if (Validation.IsUndirectedGraph(adjMatrix))
             {
                 Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi co huong");
+                Console.WriteLine("Do thi input khong phai la do thi co huong");
                 return;
             };
 
-            // Kiểm tra đồ thị có cạnh khuyên không
-            if (!Validation.IsGraphHasLoops(adjMatrix))
-            {
-                Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi khong co canh khuyen");
-                return;
-            };
+            
             CheckConnected();
             ConnectedComponent();
         }
