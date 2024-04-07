@@ -41,9 +41,8 @@ namespace GraphTheory
                 return;
             };
 
-            //Khởi tạo các biến cần thiết
-            int nT = 0;
-            List<EDGE> edgesResult = new ();
+            int nT;
+            List<EDGE> edgesResult = new();
 
             bool[] marked = new bool[adjMatrix.VertexCount];
             for (int v = 0; v < adjMatrix.VertexCount; v++)
@@ -101,7 +100,7 @@ namespace GraphTheory
                 {
                     if (adjMatrix.Data[i, j] > 0)
                     {
-                        EDGE edge = new EDGE ();
+                        EDGE edge = new EDGE();
                         edge.V = i;
                         edge.W = j;
                         edge.Weight = adjacencyMatrix.Data[i, j];
@@ -132,7 +131,7 @@ namespace GraphTheory
 
         private int Find(int x, List<int> label)
         {
-            while (label[x] != 1)
+            while (label[x] != -1)
             {
                 x = label[x];
             }
@@ -142,18 +141,15 @@ namespace GraphTheory
         //Kiểm tra cạnh có tạo thành chu trình không
         private void Union(int v, int w, List<int> label)
         {
-            if (label[v] != label[w])
+            if (label[v] > label[w])
             {
-                if (label[v] > label[w])
-                {
-                    label[w] += label[v];
-                    label[v] = w;
-                }
-                else
-                {
-                    label[v] += label[w];
-                    label[w] = v;
-                }
+                label[w] += label[v];
+                label[v] = w;
+            }
+            else
+            {
+                label[v] += label[w];
+                label[w] = v;
             }
         }
 
@@ -177,15 +173,15 @@ namespace GraphTheory
                 return;
             };
 
-            List<EDGE> edgesResult = new ();
+            List<EDGE> edgesResult = new();
 
             //Khởi tạo mảng chứa mọi cạnh của đồ thị
-            List<EDGE> listEdges = new ();
+            List<EDGE> listEdges = new();
 
             List<int> label = new();
             for (int i = 0; i < label.Count; i++)
             {
-                label[i] = i;
+                label[i] = -1;
             }
             InitListEdge(adjMatrix);
             SortListEdge(listEdges);
@@ -200,7 +196,7 @@ namespace GraphTheory
                 }
                 Union(v, w, label);
             }
-            
+
             //Tính trọng số của cây khung
             int S = 0;
             for (int i = 0; i < edgesResult.Count; i++)
