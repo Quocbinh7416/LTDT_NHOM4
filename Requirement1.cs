@@ -242,41 +242,41 @@ namespace GraphTheory
             // Kiểm tra đồ thị có cạnh bội không
             if (Validation.IsMultiGraph(adjList))
             {
-                Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi input khong phai la do thi khong co canh boi");
+                // Kiểm tra đồ thị có cạnh khuyên không
+                if (!Validation.IsGraphHasLoops(adjMatrix))
+                {
+                    Console.WriteLine(Constant.GraphNotMeetRequirement);
+                    Console.WriteLine("Đồ thị input không phải là đồ thị không có cạnh khuyên");
+                    return;
+                };
+
+                Console.WriteLine(Constant.GraphNotMeetRequirement);
+                Console.WriteLine("Đồ thị input không phải là đồ thị không có cạnh bội");
                 return;
             };
 
             // Kiểm tra đồ thị có vô hướng hay không
             if (!Validation.IsUndirectedGraph(adjMatrix))
             {
-                Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi input khong phai la do thi vo huong");
-                return;
-            };
-
-            // Kiểm tra đồ thị có cạnh khuyên không
-            if (!Validation.IsGraphHasLoops(adjMatrix))
-            {
-                Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi input khong phai la do thi khong co canh khuyen");
+                Console.WriteLine(Constant.GraphNotMeetRequirement);
+                Console.WriteLine("Đồ thị input không phải là đồ thị vô hướng");
                 return;
             };
 
             // Kiểm tra đồ thị cối xay gió
             if (IsWindmillGraph(out int nWindmill))
-                Console.WriteLine($"Do thi coi xay gio: Wd(3,{nWindmill})");
-            else Console.WriteLine("Do thi coi xay gio: Khong");
+                Console.WriteLine($"Đồ thị cối xay gió: Wd(3,{nWindmill})");
+            else Console.WriteLine("Đồ thị cối xay gió: Không");
 
             // Kiểm tra đồ thị barbell
             if (IsBarbellGraph(out int nBarbell))
-                Console.WriteLine($"Do thi barbell: Bac {nBarbell}");
-            else Console.WriteLine("Do thi barbell: Khong");
+                Console.WriteLine($"Đồ thị barbell: Bậc {nBarbell}");
+            else Console.WriteLine("Đồ thị barbell: Khong");
             // Kiểm tra đồ thị barbell
 
             if (IsKPartiteGraph(out int kPartite, out List<List<int>> partiteList))
             {
-                Console.Write($"Do thi k-phân: {kPartite}-partite ");
+                Console.Write($"Đồ thị k-phân: {kPartite}-partite ");
                 foreach (List<int> partite in partiteList)
                 {
                     Console.Write("{");
@@ -289,7 +289,7 @@ namespace GraphTheory
                 }
                 Console.WriteLine();
             }
-            else Console.WriteLine("Do thi k-phân: Khong");
+            else Console.WriteLine("Đồ thị k-phân: Không");
         }
 
     }
