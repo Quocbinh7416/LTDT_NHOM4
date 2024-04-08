@@ -45,7 +45,7 @@ namespace GraphTheory
                     Console.WriteLine("Danh sach ke:");
                     for (int i = 0; i < adjacencyList.Count; i++)
                     {
-                        Console.Write($"Dinh {i + 1}: ");
+                        Console.Write($"Dinh {i}: ");
                         foreach (var edge in adjacencyList[i])
                         {
                             Console.Write($"({edge.Item1}, {edge.Item2}) ");
@@ -138,7 +138,7 @@ namespace GraphTheory
                                     totalWeight += dist[currentNode, j];
                                     path += $" -> {currentNode + 1}";
                                 }
-                                Console.WriteLine($"Tu dinh {i + 1} den dinh {j + 1}: {path}, tong trong so: {totalWeight}");
+                                Console.WriteLine($"Tu dinh {i} den dinh {j}: {path}, tong trong so: {totalWeight}");
                             }
                         }
                     }
