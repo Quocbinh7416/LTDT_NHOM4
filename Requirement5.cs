@@ -18,12 +18,13 @@ namespace Project {
 
         public void KiemTraEuler() {
             Console.WriteLine("Bắt đầu tìm chu trình hoặc đường đi Euler");
-            Console.WriteLine("--------------------------------------------------------");
+            Console.WriteLine("-----------------------------------------------------------------------------");
             // Kiểm tra đồ thị có vô hướng hay không
             // Đồ thị có hướng -> return
             if (!Validation.IsUndirectedGraph(adjMatrix)) {
                 Console.Write(Constant.GraphNotMeetRequirement);
                 Console.WriteLine("Đồ thị nhập là đồ thị có hướng");
+                Console.WriteLine("-----------------------------------------------------------------------------");
                 return;
             };
 
@@ -31,6 +32,7 @@ namespace Project {
             if (!Validation.IsBiConnectedGraph(adjMatrix)) {
                 Console.Write(Constant.GraphNotMeetRequirement);
                 Console.WriteLine("Đồ thị nhập là đồ thị không liên thông");
+                Console.WriteLine("-----------------------------------------------------------------------------");
                 return;
             };
             // Lấy bậc của các đỉnh
@@ -81,6 +83,7 @@ namespace Project {
                 default:
                     break;
             }
+            Console.WriteLine("\n-----------------------------------------------------------------------------");
         }
 
         private List<int> EulerCircuitsFinding(AdjacencyMatrix adjacencyMatrix) {
