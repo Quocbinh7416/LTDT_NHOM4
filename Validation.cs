@@ -127,5 +127,48 @@ namespace GraphTheory
             return true;
 
         }
+
+        // Kiểm tra đồ thị có hướng có cạnh bội hay không
+        public static bool IsMultiDirectedGraph(AdjacencyMatrix adjacencyMatrix)
+        {
+            for (int i = 0; i < adjacencyMatrix.VertexCount; i++)
+            {
+                for (int j = 0; j < adjacencyMatrix.VertexCount; j++)
+                {
+                    if (adjacencyMatrix.Data[i,j] == adjacencyMatrix.Data[j,i])
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+
+        public static bool IsdirectedGraphHasLoop(AdjacencyList adjacencyList)
+        {
+            for (int i = 0; i < adjacencyList.VertexCount; i++)
+            {
+                var edges = adjacencyList.GetEdges(i);
+
+                // Kiểm tra từng đỉnh cuối trong list các cạnh xem có bị lặp lại hay không
+                for (int j = 0; j < edges.Count; j++)
+                {
+                    for (int k = j + 1; k < edges.Count; k++)
+                    {
+                        if (edges[j].Destination == 1)
+                        {
+                            if (i == j)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
     }
 }

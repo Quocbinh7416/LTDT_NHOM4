@@ -224,7 +224,7 @@ namespace GraphTheory
             if (!Validation.IsUndirectedGraph(adjMatrix))
             {
                 Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi co huong");
+                Console.WriteLine("Do thi input khong phai do thi vo huong");
                 return;
             };
 
@@ -232,7 +232,7 @@ namespace GraphTheory
             if (!Validation.IsBiConnectedGraph(adjMatrix))
             {
                 Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi khong lien thong");
+                Console.WriteLine("Do thi input khong phai la do thi lien thong");
                 return;
             };
             PrimMST PrimObject = new PrimMST(adjMatrix);
@@ -247,7 +247,7 @@ namespace GraphTheory
             if (!Validation.IsUndirectedGraph(adjMatrix))
             {
                 Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi co huong");
+                Console.WriteLine("Do thi input khong phai do thi vo huong");
                 return;
             };
 
@@ -255,7 +255,7 @@ namespace GraphTheory
             if (!Validation.IsBiConnectedGraph(adjMatrix))
             {
                 Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi khong lien thong");
+                Console.WriteLine("Do thi input khong phai la do thi lien thong");
                 return;
             };
 
