@@ -179,7 +179,7 @@ namespace GraphTheory
         public void Connection()
         {
             // Kiểm tra đồ thị có cạnh bội không
-            if (Validation.IsMultiDirectedGraph(adjMatrix))
+            if (Validation.IsMultiDirectedGraph(adjMatrix)|| Validation.IsMultiGraph(adjList))
             {
                 // Kiểm tra đồ thị có cạnh khuyên không
                 if (!Validation.IsdirectedGraphHasLoop(adjMatrix))
