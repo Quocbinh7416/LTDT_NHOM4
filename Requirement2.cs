@@ -178,18 +178,19 @@ namespace GraphTheory
 
         public void Connection()
         {
-            // Kiểm tra đồ thị có cạnh khuyên không
-            if (!Validation.IsdirectedGraphHasLoop(adjList))
-            {
-                Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi input khong phai la do thi khong co canh khuyen");
-                return;
-            };
-
+            // Kiểm tra đồ thị có cạnh bội không
             if (Validation.IsMultiDirectedGraph(adjMatrix))
             {
-                Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi input khong phai la do thi khong co canh boi");
+                // Kiểm tra đồ thị có cạnh khuyên không
+                if (!Validation.IsdirectedGraphHasLoop(adjMatrix))
+                {
+                    Console.WriteLine(Constant.GraphNotMeetRequirement);
+                    Console.WriteLine("Đồ thị input không phải là đồ thị không có cạnh khuyên");
+                    return;
+                };
+
+                Console.WriteLine(Constant.GraphNotMeetRequirement);
+                Console.WriteLine("Đồ thị input không phải là đồ thị không có cạnh bội");
                 return;
             };
 

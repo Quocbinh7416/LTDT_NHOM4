@@ -141,34 +141,20 @@ namespace GraphTheory
                     }
                 }
             }
-
             return false;
         }
 
 
-        public static bool IsdirectedGraphHasLoop(AdjacencyList adjacencyList)
+        public static bool IsdirectedGraphHasLoop(AdjacencyMatrix adjacencyMatrix)
         {
-            for (int i = 0; i < adjacencyList.VertexCount; i++)
+            for (int i = 0; i < adjacencyMatrix.VertexCount; i++)
             {
-                var edges = adjacencyList.GetEdges(i);
-
-                // Kiểm tra từng đỉnh cuối trong list các cạnh xem có bị lặp lại hay không
-                for (int j = 0; j < edges.Count; j++)
+                if (adjacencyMatrix.Data[i,i] != 0)
                 {
-                    for (int k = j + 1; k < edges.Count; k++)
-                    {
-                        if (edges[j].Destination == 1)
-                        {
-                            if (i == j)
-                            {
-                                return true;
-                            }
-                        }
-                    }
+                    return false;
                 }
             }
-
-            return false;
+            return true;
         }
     }
 }
