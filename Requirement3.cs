@@ -4,97 +4,87 @@ using System.Reflection.Metadata;
 
 namespace GraphTheory
 {
-    public class EDGE
+    public class NewPrimMST
     {
-        public int V { get; set; }
-        public int W { get; set; }
-        public int Weight { get; set; }
-    }
+        AdjacencyMatrix matrix;
 
-    class PrimMST
-    {
-        public AdjacencyMatrix matrix;
-
-        public PrimMST(AdjacencyMatrix pmatrix)
+        public NewPrimMST(AdjacencyMatrix pmatrix)
         {
             matrix = pmatrix;
         }
 
-        public int MinKey(int[] key, bool[] marked)
-        {
-            int min = int.MaxValue, min_index = -1;
-
-            for (int v = 0; v < matrix.VertexCount; v++)
-            {
-                if (marked[v] == false && key[v] < min)
-                {
-                    min = key[v];
-                    min_index = v;
-                }
-            }
-            return min_index;
-        }
-
-        public int maxKey(int[] key, bool[] marked)
+        private int MaxKey(int[] key, bool[] mstSet)
         {
             int max = int.MinValue, max_index = -1;
 
             for (int v = 0; v < matrix.VertexCount; v++)
-                if (marked[v] == false && key[v] > max)
+            {
+                if (mstSet[v] == false && key[v] > max)
                 {
                     max = key[v];
                     max_index = v;
                 }
+            }
+
             return max_index;
         }
 
-        public void printMST(int[] parent, int[] key)
-        {
-            Console.WriteLine("Giải thuật Prim");
-            Console.WriteLine("Tập cạnh của cây khung");
-            for (int i = 1; i < matrix.VertexCount; i++)
-            {
-                Console.WriteLine(parent[i] + " - " + i + ": " + matrix.Data[i, parent[i]]);
-            }
-            int Max = 0;
-            for (int i = 0; i < key.Length; i++)
-            {
-                Max += key[i];
-            }
-            Console.WriteLine($"Trọng số của cây khung: {Max}");
-        }
-
-        public void primMSTFindMaximum()
+        public void PrimMaxMST(int startVertex)
         {
             int[] parent = new int[matrix.VertexCount];
             int[] key = new int[matrix.VertexCount];
-            bool[] marked = new bool[matrix.VertexCount];
+            bool[] mstSet = new bool[matrix.VertexCount];
 
             for (int i = 0; i < matrix.VertexCount; i++)
             {
                 key[i] = int.MinValue;
-                marked[i] = false;
+                mstSet[i] = false;
             }
 
-            key[0] = 0;
-            parent[0] = -1;
+            key[startVertex] = int.MaxValue; // Khởi tạo key của đỉnh bắt đầu là max để chọn đỉnh này đầu tiên
+
+            parent[startVertex] = -1;
 
             for (int count = 0; count < matrix.VertexCount - 1; count++)
             {
-                int u = maxKey(key, marked);
-                marked[u] = true;
+                int u = MaxKey(key, mstSet);
+
+                mstSet[u] = true;
 
                 for (int v = 0; v < matrix.VertexCount; v++)
-                    if (matrix.Data[u, v] != 0 && marked[v] == false && matrix.Data[u, v] > key[v])
+                {
+                    if (matrix.Data[u, v] != 0 && mstSet[v] == false && matrix.Data[u, v] > key[v])
                     {
                         parent[v] = u;
                         key[v] = matrix.Data[u, v];
                     }
+                }
             }
-            printMST(parent, key);
+
+            Console.WriteLine("Giải thuật Prim");
+            Console.WriteLine("Tập cạnh của cây khung");
+            int Max = 0;
+            for (int i = 0; i < matrix.VertexCount; i++)
+            {
+                if (parent[i] != -1)
+                {
+                    Console.WriteLine(parent[i] + " - " + i + "    " + matrix.Data[i, parent[i]]);
+                }
+            }
+            for (int i = 0; i < key.Length; i++)
+            {
+                if (parent[i] != -1)
+                {
+                    Max += key[i];
+                }
+                 
+            }
+
+            Console.WriteLine($"Trọng số của cây khung: {Max}");
+            
         }
     }
-
+    
     public class KruskalMST
     {
 
@@ -217,7 +207,7 @@ namespace GraphTheory
             adjMatrix = new AdjacencyMatrix(adjList);
         }
 
-        public void Prim(int source)
+        public void Prim()
         {
             // Kiểm tra đồ thị có vô hướng hay không
             // Đồ thị có hướng -> return
@@ -235,8 +225,11 @@ namespace GraphTheory
                 Console.WriteLine("Do thi input khong phai la do thi lien thong");
                 return;
             };
-            PrimMST PrimObject = new PrimMST(adjMatrix);
-            PrimObject.primMSTFindMaximum();
+
+            NewPrimMST PrimObject = new NewPrimMST(adjMatrix);
+            Console.Write("Nhap dinh bat dau giai thuat pirm:");
+            int Source = int.Parse(Console.ReadLine());
+            PrimObject.PrimMaxMST(Source);
         }
 
         //Giải thuật Krukal tìm cây khung lớn nhất
