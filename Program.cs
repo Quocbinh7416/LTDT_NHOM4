@@ -116,9 +116,7 @@ namespace GraphTheory
         public static void Requirement3(string graphName)
         {
             var requirement3 = new Requirement_3(graphName);
-            Console.Write("Dinh bat dau cua giai thuat Prim: ");
-            int Source = int.Parse(Console.ReadLine());
-            requirement3.Prim(Source);
+            requirement3.Prim();
             requirement3.KruskalAL();
         }
         public static void Requirement4(string graphName)
