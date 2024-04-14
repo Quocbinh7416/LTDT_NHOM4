@@ -229,7 +229,7 @@ namespace GraphTheory
         public void Prim()
         {
             NewPrimMST PrimObject = new NewPrimMST(adjMatrix);
-            Console.Write("Nhap dinh bat dau giai thuat pirm:");
+            Console.Write("Nhap dinh bat dau giai thuat prim:");
             int Source = int.Parse(Console.ReadLine());
             PrimObject.PrimMaxMST(Source);
         }
