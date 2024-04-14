@@ -116,8 +116,12 @@ namespace GraphTheory
         public static void Requirement3(string graphName)
         {
             var requirement3 = new Requirement_3(graphName);
-            requirement3.Prim();
-            requirement3.KruskalAL();
+            bool isValid = requirement3.Validate();
+            if(isValid)
+            {
+                requirement3.Prim();
+                requirement3.KruskalAL();
+            }
         }
         public static void Requirement4(string graphName)
         {

@@ -207,25 +207,27 @@ namespace GraphTheory
             adjMatrix = new AdjacencyMatrix(adjList);
         }
 
-        public void Prim()
+        public bool Validate()
         {
             // Kiểm tra đồ thị có vô hướng hay không
             // Đồ thị có hướng -> return
-            if (!Validation.IsUndirectedGraph(adjMatrix))
-            {
+            if (!Validation.IsUndirectedGraph(adjMatrix)) {
                 Console.Write(Constant.GraphNotMeetRequirement);
                 Console.WriteLine("Do thi input khong phai do thi vo huong");
-                return;
+                return false;
             };
 
             // Kiem tra do thi vo huong lien thong
-            if (!Validation.IsBiConnectedGraph(adjMatrix))
-            {
+            if (!Validation.IsBiConnectedGraph(adjMatrix)) {
                 Console.Write(Constant.GraphNotMeetRequirement);
                 Console.WriteLine("Do thi input khong phai la do thi lien thong");
-                return;
+                return false;
             };
+            return true;
+        }
 
+        public void Prim()
+        {
             NewPrimMST PrimObject = new NewPrimMST(adjMatrix);
             Console.Write("Nhap dinh bat dau giai thuat pirm:");
             int Source = int.Parse(Console.ReadLine());
@@ -235,22 +237,6 @@ namespace GraphTheory
         //Giải thuật Krukal tìm cây khung lớn nhất
         public void KruskalAL()
         {
-            // Kiểm tra đồ thị có vô hướng hay không
-            // Đồ thị có hướng -> return
-            if (!Validation.IsUndirectedGraph(adjMatrix))
-            {
-                Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi input khong phai do thi vo huong");
-                return;
-            };
-
-            // Kiem tra do thi vo huong lien thong
-            if (!Validation.IsBiConnectedGraph(adjMatrix))
-            {
-                Console.Write(Constant.GraphNotMeetRequirement);
-                Console.WriteLine("Do thi input khong phai la do thi lien thong");
-                return;
-            };
 
             KruskalMST KruskalObject = new KruskalMST(adjMatrix);
             KruskalObject.KruskalMSTAl();
